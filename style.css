@@ -2,14 +2,15 @@ body {
     background: white;
 }
 #canvas1 {  
-    position: absolute;
-    border: 0px solid black;
-    height: 100%;
-    width: 100%;
-    transform: translate(-50%,-50%);
-    top: 50%;
-    left: 50%;
+  position: absolute;
+  border: 0px solid black;
+  width: 1920 px;
+  height: 1080 px;
+  transform: translate(-50%,-50%);
+  top: 50%;
+  left: 50%;
 }
+
 
 .bn29 {
     border: none;
