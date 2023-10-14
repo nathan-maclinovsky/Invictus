@@ -8,7 +8,7 @@ const set2 = new Image();
 set2.src = 'Hex_v01_grid.png';
 
 const tileset = new Image();
-tileset.src = 'hexagonTerrain_sheet.png';
+tileset.src = 'fantasyhextiles_v3.png';
 
 
 const intro1 = new Image();
@@ -31,8 +31,13 @@ function start(){
         dx =mymap.tileList[i].coords[0];
         //console.log(mymap.tileList[i].coords[0]);
         dy =mymap.tileList[i].coords[1];
+        //let rand = getRandomInt(5);
         console.log(mymap.tileList[i].coords[1]);
-        ctx.drawImage(set2, 0, 0, 32, 48, dx, dy, 32, 48);
+        let mult = 2;
+        if(mymap.tileList[i].type == "ocean"){
+            mult =7
+        }
+        ctx.drawImage(set2, 32*mult, 0, 32, 48, dx, dy, 32, 48);
         
        
       } 
@@ -47,6 +52,9 @@ function start(){
     
     
 }
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
 
 
 
