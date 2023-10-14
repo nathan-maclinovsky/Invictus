@@ -16,8 +16,8 @@ intro1.src = 'pixle_art_of_a__1-transformed.png';
 
 
 
-const CANVAS_WIDTH = canvas.width = 1000;
-const CANVAS_HEIGHT = canvas.height =1000;
+const CANVAS_WIDTH = canvas.width = 1500;
+const CANVAS_HEIGHT = canvas.height =1500;
 //console.log( mymap.tileList[1].coords[0]);
 
 
@@ -61,7 +61,8 @@ function getRandomInt(max) {
 function animate(){ 
 
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT); 
-    ctx.drawImage(intro1,0,0);
+    ctx.drawImage(intro1, canvas.width / 2 - intro1.width / 2,canvas.height / 2 - intro1.height / 2);
+
     requestAnimationFrame(animate);
     
 }
