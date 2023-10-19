@@ -35,7 +35,7 @@ class Shroom{
  }
  update(){
   if(gameFrame % 10 ===0 ){
-    
+
   this.frame>5 ? this.frame = 0 : this.frame++;
  }
 }
@@ -64,7 +64,7 @@ function start(){
         let mult = 2;
 
         if(mymap.tileList[i].type == "ocean"){
-            mult =7
+            mult =8;
         }
         ctx.drawImage(set2, 32*mult, 0, 32, 48, dx, dy, 32, 48);
         
