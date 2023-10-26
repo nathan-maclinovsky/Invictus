@@ -3,14 +3,14 @@ const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 
 const set2 = new Image();
-set2.src = 'Hex_v01_grid.png';
+set2.src = 'Game assets/Hex_v01_grid.png';
 
 const intro1 = new Image();
-intro1.src = 'pixle_art_of_a__1-transformed.png';
+intro1.src = 'Game assets/pixle_art_of_a__1-transformed.png';
 
 const shroom_sheet = new Image();
 const numberOfEnemies = 1;
-shroom_sheet.src = 'Attack3.png';
+shroom_sheet.src = 'Game assets/Attack3.png';
 let gameFrame = 0;
 const shroomarray = [];
 

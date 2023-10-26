@@ -1,5 +1,5 @@
 body {
-    background: white;
+  background-image: url('Game assets/ocean.jpeg');
 }
 #canvas1 {  
   position: absolute;
