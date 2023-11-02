@@ -62,6 +62,7 @@ class Necromancer{
     this.power =  Math.floor(Math.random() * 10) + 1;
     this.spriteWidth = 160;
     this.spriteHeight= 128;
+    this.offset = 40;
     this.state = 4;
  }
  update(){
@@ -71,8 +72,8 @@ class Necromancer{
  }
 }
 draw(){
-  //ctx.fillRect(this.x, this.y, this.spriteWidth/4, this.spriteHeight/4); 
-  ctx.drawImage(necromancer,this.frame * this.spriteWidth,this.state*this.spriteHeight,this.spriteWidth,this.spriteHeight,this.x,this.y,this.spriteWidth/4,this.spriteHeight/4);
+  ctx.fillRect(this.x, this.y, this.spriteWidth-100, this.spriteHeight); 
+  ctx.drawImage(necromancer,this.frame * this.spriteWidth,this.state*this.spriteHeight,this.spriteWidth,this.spriteHeight,this.x,this.y,this.spriteWidth-100,this.spriteHeight);
   
   
 }
