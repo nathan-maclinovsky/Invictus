@@ -9,13 +9,14 @@ const intro1 = new Image();
 intro1.src = 'Game assets/pixle_art_of_a__1-transformed.png';
 
 const shroom_sheet = new Image();
-const numberOfEnemies = 10;
-shroom_sheet.src = 'Game assets/Attack3.png';
+const numberOfEnemies = 0;
+shroom_sheet.src = 'Game assets/Idle.png';
 
 const necromancer = new Image();
 necromancer.src = 'Game assets/Necromancer_creativekind-Sheet.png';
 
-let gameFrameSpeed = 3;
+let gameFrameSpeed = 5;
+let shroomgameFrameSpeed = 15;
 
 
 let gameFrame = 0;
@@ -41,9 +42,9 @@ class Shroom{
     this.spriteHeight= 165;
  }
  update(){
-  if(gameFrame % gameFrameSpeed ===0 ){
+  if(gameFrame % shroomgameFrameSpeed ===0 ){
 
-  this.frame>5 ? this.frame = 0 : this.frame++;
+  this.frame>2 ? this.frame = 0 : this.frame++;
  }
 }
 draw(){
@@ -72,9 +73,9 @@ class Necromancer{
  }
 }
 draw(){
-  ctx.fillRect(this.x, this.y, this.spriteWidth-100, this.spriteHeight); 
-  ctx.drawImage(necromancer,this.frame * this.spriteWidth,this.state*this.spriteHeight,this.spriteWidth,this.spriteHeight,this.x,this.y,this.spriteWidth-100,this.spriteHeight);
-  
+  ctx.fillRect(this.x, this.y, 55, 80); 
+  //ctx.drawImage(necromancer,this.frame * this.spriteWidth,this.state*this.spriteHeight,this.spriteWidth,this.spriteHeight,this.x,this.y,this.spriteWidth,this.spriteHeight);
+  ctx.drawImage(necromancer,55+this.frame*this.spriteWidth,50+this.state*this.spriteHeight,55,80,this.x,this.y,55,80);
   
 }
 
@@ -85,15 +86,16 @@ function nobutton(){
   start();
 }
 for(let i = 0; i< numberOfEnemies; i++){
-  //var randomNumber = Math.floor(Math.random() * 722) + 0;
- // shroomarray.push(new Shroom(mymap.tileList[randomNumber].coords));
-  //console.log(mymap.tileList[randomNumber].coords);
+  var randomNumber = Math.floor(Math.random() * 722) + 0;
+ shroomarray.push(new Shroom(mymap.tileList[randomNumber].coords));
+  console.log(mymap.tileList[randomNumber].coords);
   var randomNumber = Math.floor(Math.random() * 722) + 0;
   necromancerArray.push(new Necromancer(mymap.tileList[randomNumber].coords));
   console.log(mymap.tileList[randomNumber].coords);
  
 }
-
+necromancerArray.push(new Necromancer(mymap.tileList[700].coords));
+console.log(mymap.tileList[700].coords);
 function start(){
     gameFrame ++;
     
@@ -101,21 +103,23 @@ function start(){
     for (let i = 0; i < mymap.tileList.length; i++) {
         dx =mymap.tileList[i].coords[0];
         dy =mymap.tileList[i].coords[1];
-        let mult = 2;
+        let xmult = 2;
+        let ymult = 0
+        if(mymap.tileList[i].type == "Mountain"){
+            xmult =2;
+            ymult =9;
 
-        if(mymap.tileList[i].type == "ocean"){
-            mult =8;
         }
-        ctx.drawImage(set2, 32*mult, 0, 32, 48, dx, dy, 32, 48);
+        ctx.drawImage(set2, 32*xmult, 48*ymult, 32, 48, dx, dy, 32, 48);
         //ctx.fillRect(dx, dy, 32, 48);
         
        
       } 
-    //   shroomarray.forEach(Shroom => {
-    //     Shroom.update();
-    //     Shroom.draw();
+      shroomarray.forEach(Shroom => {
+        Shroom.update();
+        Shroom.draw();
        
-    // });
+    });
       necromancerArray.forEach(Necromancer => {
         Necromancer.update();
         Necromancer.draw();
