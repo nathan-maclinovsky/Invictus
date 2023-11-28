@@ -9,7 +9,7 @@ const intro1 = new Image();
 intro1.src = 'Game assets/pixle_art_of_a__1-transformed.png';
 
 const shroom_sheet = new Image();
-const numberOfEnemies = 0;
+const numberOfEnemies = 10;
 shroom_sheet.src = 'Game assets/Idle.png';
 
 const necromancer = new Image();
@@ -23,7 +23,7 @@ let gameFrame = 0;
 const shroomarray = [];
 const necromancerArray = [];
 
-
+var mymap= window.tiles;
 
 const CANVAS_WIDTH = canvas.width = 1500;
 const CANVAS_HEIGHT = canvas.height =1500;
@@ -73,7 +73,7 @@ class Necromancer{
  }
 }
 draw(){
-  ctx.fillRect(this.x, this.y, 55, 80); 
+  //ctx.fillRect(this.x, this.y, 55/2, 80/2); 
   //ctx.drawImage(necromancer,this.frame * this.spriteWidth,this.state*this.spriteHeight,this.spriteWidth,this.spriteHeight,this.x,this.y,this.spriteWidth,this.spriteHeight);
   ctx.drawImage(necromancer,55+this.frame*this.spriteWidth,50+this.state*this.spriteHeight,55,80,this.x,this.y,55,80);
   
@@ -87,15 +87,15 @@ function nobutton(){
 }
 for(let i = 0; i< numberOfEnemies; i++){
   var randomNumber = Math.floor(Math.random() * 722) + 0;
- shroomarray.push(new Shroom(mymap.tileList[randomNumber].coords));
+  shroomarray.push(new Shroom(mymap.tileList[randomNumber].coords));
   console.log(mymap.tileList[randomNumber].coords);
   var randomNumber = Math.floor(Math.random() * 722) + 0;
   necromancerArray.push(new Necromancer(mymap.tileList[randomNumber].coords));
   console.log(mymap.tileList[randomNumber].coords);
  
 }
-necromancerArray.push(new Necromancer(mymap.tileList[700].coords));
-console.log(mymap.tileList[700].coords);
+
+
 function start(){
     gameFrame ++;
     
@@ -148,7 +148,6 @@ animate();
 
 
 
-    //ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT); 
    
 
 
