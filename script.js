@@ -9,7 +9,7 @@ const intro1 = new Image();
 intro1.src = 'Game assets/pixle_art_of_a__1-transformed.png';
 
 const shroom_sheet = new Image();
-const numberOfEnemies = 10;
+const numberOfEnemies = 5;
 shroom_sheet.src = 'Game assets/Idle.png';
 
 const necromancer = new Image();
@@ -17,6 +17,7 @@ necromancer.src = 'Game assets/Necromancer_creativekind-Sheet.png';
 
 let gameFrameSpeed = 5;
 let shroomgameFrameSpeed = 15;
+let gamestart = false;
 
 
 let gameFrame = 0;
@@ -73,16 +74,19 @@ class Necromancer{
  }
 }
 draw(){
-  //ctx.fillRect(this.x, this.y, 55/2, 80/2); 
+  // ctx.strokeStyle = 'red';
+  // ctx.strokeRect(this.x-10, this.y-40, 55, 80); 
   //ctx.drawImage(necromancer,this.frame * this.spriteWidth,this.state*this.spriteHeight,this.spriteWidth,this.spriteHeight,this.x,this.y,this.spriteWidth,this.spriteHeight);
-  ctx.drawImage(necromancer,55+this.frame*this.spriteWidth,50+this.state*this.spriteHeight,55,80,this.x,this.y,55,80);
+  ctx.drawImage(necromancer,55+this.frame*this.spriteWidth,50+this.state*this.spriteHeight,55,80,this.x-10,this.y-40,55,80);
   
 }
 
 
 }
-function nobutton(){
-  document.getElementById("beginbutton").style.display = "none";
+function nobutton() {
+  document.getElementById("beginbutton").style.display= "none";
+  startMusic();
+  console.log(myMusic)
   start();
 }
 for(let i = 0; i< numberOfEnemies; i++){
