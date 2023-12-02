@@ -35,8 +35,6 @@ class Shroom{
     
     this.x = tileCords[0];
     this.y = tileCords[1];
-    //this.x = tile[0];
-    //this.y = tile[1];
     this.frame = 0;
     this.power =  Math.floor(Math.random() * 10) + 1;
     this.spriteWidth = 150;
@@ -58,8 +56,6 @@ class Necromancer{
   constructor(tileCords){
     this.x = tileCords[0];
     this.y = tileCords[1];
-    //this.x = tile[0];
-    //this.y = tile[1];
     this.frame = 0;
     this.power =  Math.floor(Math.random() * 10) + 1;
     this.spriteWidth = 160;
@@ -76,7 +72,6 @@ class Necromancer{
 draw(){
   // ctx.strokeStyle = 'red';
   // ctx.strokeRect(this.x-10, this.y-40, 55, 80); 
-  //ctx.drawImage(necromancer,this.frame * this.spriteWidth,this.state*this.spriteHeight,this.spriteWidth,this.spriteHeight,this.x,this.y,this.spriteWidth,this.spriteHeight);
   ctx.drawImage(necromancer,55+this.frame*this.spriteWidth,50+this.state*this.spriteHeight,55,80,this.x-10,this.y-40,55,80);
   
 }
@@ -84,11 +79,16 @@ draw(){
 
 }
 function nobutton() {
-  document.getElementById("beginbutton").style.display= "none";
-  startMusic();
-  console.log(myMusic)
-  start();
+  document.getElementById("beginbutton").style.display = "none";
+  // Check if startMusic is defined globally
+  if (typeof window.startMusic === 'function') {
+    window.startMusic();
+  }
+  start(); // start the game
 }
+
+
+
 for(let i = 0; i< numberOfEnemies; i++){
   var randomNumber = Math.floor(Math.random() * 722) + 0;
   shroomarray.push(new Shroom(mymap.tileList[randomNumber].coords));

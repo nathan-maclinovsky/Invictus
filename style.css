@@ -75,4 +75,32 @@ body {
     height: 115%;
   }
 
+  .toggle-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: #ccc; 
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    border-radius: 5px;
+    user-select: none; 
+  }
+  
+  /* Add visual feedback on hover */
+  .toggle-button:hover {
+    background-color: #b3b3b3; 
+  }
+  
+  /* Styles for the toggle icon (checkmark or 'X') */
+  #toggleIcon {
+    padding-left: 5px;
+    font-size: 20px;
+  }
   
