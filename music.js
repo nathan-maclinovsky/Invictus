@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   
   let myMusic;
   let isMusicPlaying = true;
+  const volumeSlider = document.getElementById('volumeSlider');
 
   function updateToggleIcon() {
     const toggleIcon = document.getElementById("toggleIcon");
@@ -50,6 +51,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
     isMusicPlaying = true;
     updateToggleIcon();
   }
+  volumeSlider.addEventListener('input', function() {
+    const volume = this.value;
+    songs.forEach(function(song) {
+      song.volume = volume;
+    });
+  });
 
   function toggleMusic() {
     // Use the 'isMusicPlaying' state to toggle music on and off.
