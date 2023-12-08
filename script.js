@@ -10,6 +10,9 @@ set2.src = 'Game assets/Hex_v01_grid.png';
 const intro1 = new Image();
 intro1.src = 'Game assets/pixle_art_of_a__1-transformed.png';
 
+const house = new Image();
+house.src = 'Game assets/top-down-town-tileset.png';
+
 const shroom_sheet = new Image();
 const numberOfEnemies = 1;
 shroom_sheet.src = 'Game assets/Idle.png';
@@ -131,7 +134,7 @@ class Wizard extends Enemy {
 
   }
 }
-var ben = new Player(mymap.tileList[722/2]);
+var ben = new Player(mymap.tileList[((722/2)+32)]);
 enemyarray.push(ben);
 enemyarray.push(new Wizard(mymap.tileList[1]));
 console.log(ben);
@@ -202,7 +205,8 @@ function start(){
         //ctx.fillRect(dx, dy, 32, 48);
         
        
-      } 
+      }
+      ctx.drawImage(house, 180, 0, 100, 200, mymap.tileList[722/2].coords[0]-16, mymap.tileList[722/2].coords[1]+6, 30, 60); 
       enemyarray.forEach(Enemy => {
         Enemy.update();
         Enemy.draw();
