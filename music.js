@@ -1,5 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', (event) => {
+  console.log("yo");
   // Fetch song elements now that the DOM is fully loaded
   const songs = [
     document.getElementById("song1"),
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   ];
   
   let myMusic;
-  let isMusicPlaying = true;
+  let isMusicPlaying = false;
   const volumeSlider = document.getElementById('volumeSlider');
 
   function updateToggleIcon() {
@@ -36,7 +37,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   function startMusic() {
-    // Stops the previously playing song, if any.
     if (myMusic) {
       myMusic.stop();
     }
@@ -44,27 +44,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const randomIndex = Math.floor(Math.random() * songs.length);
     const randomSong = songs[randomIndex];
     const onEndedCallback = function() {
-      startMusic();
+      startMusic(); // Calls startMusic again to create a continuous loop of music
     };
     myMusic = new sound(randomSong, onEndedCallback);
     myMusic.play();
-    isMusicPlaying = true;
-    updateToggleIcon();
+    isMusicPlaying = true; // Update the isMusicPlaying to true now that music is playing
+    updateToggleIcon(); // Update the toggle icon to match the current state
   }
-  volumeSlider.addEventListener('input', function() {
-    const volume = this.value;
-    songs.forEach(function(song) {
-      song.volume = volume;
-    });
-  });
 
   function toggleMusic() {
-    // Use the 'isMusicPlaying' state to toggle music on and off.
     if (isMusicPlaying) {
       if (myMusic) myMusic.stop();
       isMusicPlaying = false;
     } else {
-      startMusic();
+      startMusic(); // startMusic will be called only when toggleMusic is invoked
     }
     updateToggleIcon();
   }
@@ -72,7 +65,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   const toggleButton = document.getElementById("toggleButton");
   toggleButton.addEventListener('click', toggleMusic);
 
-  // Set the initial state of the music and toggle icon.
   updateToggleIcon();
   window.startMusic = startMusic; // Make startMusic available globally if needed.
 });

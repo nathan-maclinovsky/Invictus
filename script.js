@@ -1,4 +1,6 @@
 /**@type {HTMLCancasElement} */
+
+
 const canvas = document.getElementById("canvas1");
 const ctx = canvas.getContext("2d");
 
@@ -23,39 +25,24 @@ let gamestart = false;
 let gameFrame = 0;
 const shroomarray = [];
 const necromancerArray = [];
+const enemyarray= [];
 
 var mymap= window.tiles;
 
 const CANVAS_WIDTH = canvas.width = 1500;
 const CANVAS_HEIGHT = canvas.height =1500;
-//console.log( mymap.tileList[1].coords[0]);
-class Shroom{
-  constructor(tileCords){
-    
-    
-    this.x = tileCords[0];
-    this.y = tileCords[1];
-    this.frame = 0;
-    this.power =  Math.floor(Math.random() * 10) + 1;
-    this.spriteWidth = 150;
-    this.spriteHeight= 165;
- }
- update(){
-  if(gameFrame % shroomgameFrameSpeed ===0 ){
-
-  this.frame>2 ? this.frame = 0 : this.frame++;
- }
-}
-draw(){
-  ctx.drawImage(shroom_sheet,this.frame * this.spriteWidth,0,this.spriteWidth,this.spriteHeight,this.x,this.y,this.spriteWidth,this.spriteHeight);
-}
 
 
-}
+
+
+
+
+
 class Enemy{
-  constructor(tileCords, spriteSheetSrc){
-    this.x = tileCords[0];
-    this.y = tileCords[1];
+  constructor(tile, spriteSheetSrc){
+    this.currentTile = tile;
+    this.x = this.currentTile.coords[0];
+    this.y = this.currentTile.coords[1];
     this.frame = 0; // Start at a random frame
     this.maxFrame = 10; // Assuming you have 16 frames 0-15
     this.frameDelay = 5; // Random delay between 5-14
@@ -89,13 +76,43 @@ draw(){
   ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.cutOutWidth,this.cutOutHight);
 }
 
+changeTile(tile){
+  this.currentTile = tile;
+  this.x = this.currentTile.coords[0];
+  this.y = this.currentTile.coords[1];
 }
 
+}
+
+class Player extends Enemy{
+  constructor(tile){
+    super(tile,'Game assets/NinjaSprites/Idle.png');
+    this.power = 5;
+    this.state =0;
+    this.frame = 0;
+    this.maxFrame=3;
+    this.spriteWidth =200;
+    this.spriteHeight=200;
+    this.offset=0;
+    this.leftStart=75;
+    this.topStart=70;
+    this.cutOutWidth=50;
+    this.cutOutHight=70;
+    this.xOffSet=9;
+    this.yOffSet=35;
+    this.showoutline = false;
+    this.frameDelay= 10;
+
+  }
+  
+}
+
+
 class Wizard extends Enemy {
-  constructor(tileCords) {
-    console.log("ben");
+  constructor(tile) {
+    
     // Pass the static sprite sheet source to the super class constructor
-    super(tileCords, 'Game assets/WizardSprites/Idle.png');
+    super(tile, 'Game assets/WizardSprites/Idle.png');
     // You can adjust any properties specific to ShroomEnemy here
     this.power = Math.floor(Math.random() * 5) + 5; // Shroom enemies have power in this range
     this.state = 0; // Different animation state if needed
@@ -114,8 +131,10 @@ class Wizard extends Enemy {
 
   }
 }
-shroomarray.push(new Wizard(mymap.tileList[1].coords));
-
+var ben = new Player(mymap.tileList[722/2]);
+enemyarray.push(ben);
+enemyarray.push(new Wizard(mymap.tileList[1]));
+console.log(ben);
 
 
 
@@ -151,18 +170,13 @@ draw(){
 function nobutton() {
   document.getElementById("beginbutton").style.display = "none";
   // Check if startMusic is defined globally
-  if (typeof window.startMusic === 'function') {
-    window.startMusic();
-  }
+
   start(); // start the game
 }
 
 
 
 for(let i = 0; i< numberOfEnemies; i++){
-  var randomNumber = Math.floor(Math.random() * 722) + 0;
-  shroomarray.push(new Wizard(mymap.tileList[randomNumber].coords));
-  console.log(mymap.tileList[randomNumber].coords);
   var randomNumber = Math.floor(Math.random() * 722) + 0;
   necromancerArray.push(new Necromancer(mymap.tileList[randomNumber].coords));
   console.log(mymap.tileList[randomNumber].coords);
@@ -189,7 +203,7 @@ function start(){
         
        
       } 
-      shroomarray.forEach(Enemy => {
+      enemyarray.forEach(Enemy => {
         Enemy.update();
         Enemy.draw();
        
@@ -202,9 +216,21 @@ function start(){
     });
     requestAnimationFrame(start);
 
+    document.onkeydown = function(event) {
+      if(event.key === 'd' || event.key === 'D') {
+          console.log("ben");
+          const rightTile = ben.currentTile.adjacent['right'];
+          console.log(rightTile);
+          ben.changeTile(rightTile);
+          console.log(ben);
+          //movePlayerToRightTile(player);
+      }
+  };
 
 
-}
+
+
+  }
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
