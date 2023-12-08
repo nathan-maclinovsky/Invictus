@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   let myMusic;
   let isMusicPlaying = false;
   const volumeSlider = document.getElementById('volumeSlider');
+  const audioElements = document.querySelectorAll('audio');
 
   function updateToggleIcon() {
     const toggleIcon = document.getElementById("toggleIcon");
@@ -35,6 +36,19 @@ document.addEventListener('DOMContentLoaded', (event) => {
       this.audioElement.currentTime = 0;
     };
   }
+  function setVolume() {
+    const volume = volumeSlider.value;
+    audioElements.forEach(audio => {
+        audio.volume = volume;
+    });
+  }
+  volumeSlider.addEventListener('input', setVolume);
+  window.addEventListener('DOMContentLoaded', (event) => {
+    setVolume();
+});
+
+
+
 
   function startMusic() {
     if (myMusic) {
