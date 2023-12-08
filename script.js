@@ -225,6 +225,47 @@ function start(){
           console.log(ben);
           //movePlayerToRightTile(player);
       }
+      if(event.key === 'A' || event.key === 'a') {
+        console.log("ben");
+        const rightTile = ben.currentTile.adjacent['left'];
+        console.log(rightTile);
+        ben.changeTile(rightTile);
+        console.log(ben);
+        //movePlayerToRightTile(player);
+    }
+      if(event.key === 'q' || event.key === 'Q') {
+        console.log("ben");
+        const rightTile = ben.currentTile.adjacent['topLeft'];
+        console.log(rightTile);
+        ben.changeTile(rightTile);
+        console.log(ben);
+      //movePlayerToRightTile(player);
+     }
+     if(event.key === 'E' || event.key === 'e') {
+      console.log("ben");
+      const rightTile = ben.currentTile.adjacent['topRight'];
+      console.log(rightTile);
+      ben.changeTile(rightTile);
+      console.log(ben);
+    //movePlayerToRightTile(player);
+   } 
+     if(event.key === 'Z' || event.key === 'z') {
+      console.log("ben");
+      const rightTile = ben.currentTile.adjacent['bottomLeft'];
+      console.log(rightTile);
+      ben.changeTile(rightTile);
+      console.log(ben);
+  //movePlayerToRightTile(player);
+ }
+    if(event.key === 'C' || event.key === 'c') {
+    console.log("ben");
+    const rightTile = ben.currentTile.adjacent['bottomRight'];
+    console.log(rightTile);
+    ben.changeTile(rightTile);
+    console.log(ben);
+//movePlayerToRightTile(player);
+}
+
   };
 
 
