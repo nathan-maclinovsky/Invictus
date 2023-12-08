@@ -38,7 +38,65 @@ function createTilePointers(tileList) {
     //     });
     // });
   }
+  function isAdjacent(currentTile, targetTile) {
+    return Object.values(currentTile.adjacent).some(adjTile => adjTile === targetTile);
+  }
   
     
     
   createTilePointers(mymap.tileList, 32,16);
+
+
+
+
+   function moveKey(event) {
+    if(event.key === 'd' || event.key === 'D') {
+        console.log("ben");
+        const rightTile = ben.currentTile.adjacent['right'];
+        console.log(rightTile);
+        ben.changeTile(rightTile);
+        console.log(ben);
+        //movePlayerToRightTile(player);
+    }
+    if(event.key === 'A' || event.key === 'a') {
+      console.log("ben");
+      const rightTile = ben.currentTile.adjacent['left'];
+      console.log(rightTile);
+      ben.changeTile(rightTile);
+      console.log(ben);
+      
+  }
+    if(event.key === 'q' || event.key === 'Q') {
+      console.log("ben");
+      const rightTile = ben.currentTile.adjacent['topLeft'];
+      console.log(rightTile);
+      ben.changeTile(rightTile);
+      console.log(ben);
+   
+   }
+   if(event.key === 'E' || event.key === 'e') {
+    console.log("ben");
+    const rightTile = ben.currentTile.adjacent['topRight'];
+    console.log(rightTile);
+    ben.changeTile(rightTile);
+    console.log(ben);
+ 
+ } 
+   if(event.key === 'Z' || event.key === 'z') {
+    console.log("ben");
+    const rightTile = ben.currentTile.adjacent['bottomLeft'];
+    console.log(rightTile);
+    ben.changeTile(rightTile);
+    console.log(ben);
+
+}
+  if(event.key === 'C' || event.key === 'c') {
+  console.log("ben");
+  const rightTile = ben.currentTile.adjacent['bottomRight'];
+  console.log(rightTile);
+  ben.changeTile(rightTile);
+  console.log(ben);
+
+}
+
+};
