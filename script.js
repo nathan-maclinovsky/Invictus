@@ -32,11 +32,26 @@ const enemyarray= [];
 
 var mymap= window.tiles;
 
-const CANVAS_WIDTH = canvas.width = 1500;
-const CANVAS_HEIGHT = canvas.height =1500;
+const CANVAS_WIDTH = canvas.width = window.innerWidth;
+const CANVAS_HEIGHT = canvas.height =window.innerHeight;
+
+function adjustTileXCoordinates(tileList) {
+  const halfScreenWidth = window.innerWidth / 2;
+  const xOffset = halfScreenWidth - 750;
+
+  tileList.forEach(tile => {
+      tile.coords[0] += xOffset;
+  });
+}
+adjustTileXCoordinates(mymap.tileList);
 
 
-
+class Item{
+  constructor(){
+    this.name;
+    this.power;
+  }
+}
 
 
 
@@ -105,6 +120,11 @@ class Player extends Enemy{
     this.yOffSet=35;
     this.showoutline = false;
     this.frameDelay= 10;
+    this.inventory = {
+      power: this.power,
+      gold: 0,
+      items: []
+  };
 
   }
   
@@ -139,35 +159,28 @@ enemyarray.push(ben);
 enemyarray.push(new Wizard(mymap.tileList[1]));
 console.log(ben);
 
+class Necromancer extends Enemy{
+  constructor(tile) { 
+    // Pass the static sprite sheet source to the super class constructor
+    super(tile, 'Game assets/Necromancer_creativekind-Sheet.png');
+    // You can adjust any properties specific to ShroomEnemy here
+    this.power = Math.floor(Math.random() * 5) + 5; // Shroom enemies have power in this range
+    this.state = 4; // Different animation state if needed
+    this.frame = Math.floor(Math.random() * 7);
+    this.maxFrame = 15;
+    this.spriteWidth =160;
+    this.spriteHeight=128;
+    this.leftStart=55;
+    this.topStart=50;
+    this.cutOutWidth=55;
+    this.cutOutHight=80;
+    this.yOffSet=40;
+    this.xOffSet=10;
+    this.showoutline = false;
+    // this.yOffSet=0;
 
-
-
-
-class Necromancer {
-  constructor(tileCords){
-    this.x = tileCords[0];
-    this.y = tileCords[1];
-    this.frame = Math.floor(Math.random() * 16); // Start at a random frame
-    this.maxFrame = 15; // Assuming you have 16 frames 0-15
-    this.frameDelay = Math.floor(Math.random() * 6) + 5; // Random delay between 5-14
-    this.frameTimer = 0;
-    this.power = Math.floor(Math.random() * 10) + 1;
-    this.spriteWidth = 160;
-    this.spriteHeight = 128;
-    this.offset = 40;
-    this.state = 4;
- }
- update(){
-  this.frameTimer++;
-  if(this.frameTimer % this.frameDelay === 0){
-    this.frame = this.frame >= this.maxFrame ? 0 : this.frame + 1;
   }
-}
-draw(){ 
-  // ctx.strokeStyle = 'red';
-  // ctx.strokeRect(this.x-10, this.y-40, 55, 80); 
-  ctx.drawImage(necromancer,55+this.frame*this.spriteWidth,50+this.state*this.spriteHeight,55,80,this.x-10,this.y-40,55,80);
-}
+
 }
 
 function nobutton() {
@@ -181,7 +194,7 @@ function nobutton() {
 
 for(let i = 0; i< numberOfEnemies; i++){
   var randomNumber = Math.floor(Math.random() * 722) + 0;
-  necromancerArray.push(new Necromancer(mymap.tileList[randomNumber].coords));
+  enemyarray.push(new Necromancer(mymap.tileList[randomNumber]));
   console.log(mymap.tileList[randomNumber].coords);
  
 }
@@ -206,24 +219,18 @@ function start(){
         
        
       }
-      ctx.drawImage(house, 180, 0, 100, 200, mymap.tileList[722/2].coords[0]-16, mymap.tileList[722/2].coords[1]+6, 30, 60); 
-      enemyarray.forEach(Enemy => {
-        Enemy.update();
-        Enemy.draw();
+    ctx.drawImage(house, 180, 0, 100, 200, mymap.tileList[722/2].coords[0]-16, mymap.tileList[722/2].coords[1]+6, 30, 60); 
+    enemyarray.forEach(Enemy => {
+      Enemy.update();
+      Enemy.draw();
        
-    });
-      necromancerArray.forEach(Necromancer => {
-        Necromancer.update();
-        Necromancer.draw();
-        
-         
     });
     requestAnimationFrame(start);
 
-    document.onkeydown = function(event) {
-        moveKey(event);
+  //   document.onkeydown = function(event) {
+  //       moveKey(event);
 
-  };
+  // };
 
 
 
@@ -273,6 +280,13 @@ function onCanvasClick(event) {
 }
 
 canvas.addEventListener('click', onCanvasClick);
+
+
+
+
+function resetPlayerPosition() {
+  ben.changeTile(mymap.tileList[((722/2)+32)]);
+}
 
    
 

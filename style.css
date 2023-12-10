@@ -9,6 +9,7 @@ body {
   transform: translate(-50%,-50%);
   top: 50%;
   left: 50%;
+  z-index: -1;
     
 }
 
@@ -106,5 +107,22 @@ body {
   #volumeSlider {
     width: 100px;
     cursor: pointer;
+  }
+
+  #resetButton {
+    /* Style your button accordingly */
+    background-color: #ccc; /* Green background */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  #resetButton:hover {
+    background-color: #b3b3b3; 
   }
   

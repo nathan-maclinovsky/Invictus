@@ -1,6 +1,8 @@
 var mymap= window.tiles;
 
 
+
+
 function createTilePointers(tileList) {
     console.log("in");
     // Define the offsets for the surrounding tiles
