@@ -32,18 +32,8 @@ const enemyarray= [];
 
 var mymap= window.tiles;
 
-const CANVAS_WIDTH = canvas.width = window.innerWidth;
-const CANVAS_HEIGHT = canvas.height =window.innerHeight;
-
-function adjustTileXCoordinates(tileList) {
-  const halfScreenWidth = window.innerWidth / 2;
-  const xOffset = halfScreenWidth - 750;
-
-  tileList.forEach(tile => {
-      tile.coords[0] += xOffset;
-  });
-}
-adjustTileXCoordinates(mymap.tileList);
+const CANVAS_WIDTH = canvas.width = 1500;
+const CANVAS_HEIGHT = canvas.height =1500;
 
 
 class Item{
