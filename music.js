@@ -76,12 +76,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
     updateToggleIcon();
   }
 
-  const toggleButton = document.getElementById("toggleButton");
+  const toggleButton = document.getElementById("toggleIcon");
   toggleButton.addEventListener('click', toggleMusic);
 
   updateToggleIcon();
   window.startMusic = startMusic; // Make startMusic available globally if needed.
 });
-
-
 

@@ -13,6 +13,35 @@ body {
 }
 
 
+
+.settings-icon {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+}
+
+.settings-dropdown {
+  display: none;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  padding: 10px;
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  z-index: 1;
+  width: 250px; /* Adjust width based on content */
+}
+
+.settings-item {
+  margin-bottom: 10px; /* Space out the settings items */
+}
+
+
+
 .bn29 {
     border: none;
     padding: 0.8em 2.5em;

@@ -90,8 +90,32 @@ changeTile(tile){
   this.y = this.currentTile.coords[1];
 }
 
+
+}
+class Tower extends Enemy{
+  constructor(tile,assetpath){
+  console.log("tower");
+  super(tile,'Game assets/castles/Asset 24.png');
+  this.state =0;
+  this.frame = 0;
+  this.maxFrame=0;
+  this.spriteWidth =275;
+  this.spriteHeight=475;
+  this.cutOutWidth=275;
+  this.cutOutHight=475;
+  this.yOffSet = 30;
+  this.showoutline = false;
+}
+draw(){ 
+  if(this.showoutline == true){
+  ctx.strokeStyle = 'red';
+  ctx.strokeRect(this.x-this.xOffSet, this.y-this.yOffSet, this.cutOutWidth, this.cutOutHight); 
+  }
+  ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.spriteWidth/7.5, this.spriteHeight/7.5);
 }
 
+
+}
 class Player extends Enemy{
   constructor(tile){
     super(tile,'Game assets/NinjaSprites/Idle.png');
@@ -145,9 +169,13 @@ class Wizard extends Enemy {
   }
 }
 var ben = new Player(mymap.tileList[((722/2)+32)]);
+var tower = new Tower(mymap.tileList[0]);
+var tower2 = new Tower(mymap.tileList[400]);
 enemyarray.push(ben);
+enemyarray.push(tower);
+enemyarray.push(tower2);
 enemyarray.push(new Wizard(mymap.tileList[1]));
-console.log(ben);
+console.log(enemyarray);
 
 class Necromancer extends Enemy{
   constructor(tile) { 
@@ -279,6 +307,12 @@ function resetPlayerPosition() {
 }
 
    
+document.getElementById('settingsMenuIcon').addEventListener('click', function() {
+  console.log("ben");
+  var dropdown = document.getElementById('settingsDropdown');
+  dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+});
+
 
 
 
