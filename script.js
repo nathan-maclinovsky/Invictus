@@ -31,7 +31,7 @@ const necromancerArray = [];
 const enemyarray= [];
 
 var mymap= window.tiles;
-
+var fps = 160;
 const CANVAS_WIDTH = canvas.width = 1500;
 const CANVAS_HEIGHT = canvas.height =1500;
 
@@ -42,9 +42,9 @@ class Item{
     this.power;
   }
 }
+// Function that returns a Promise for the FPS
 
-
-
+// Calling the function to get the FPS
 
 class Enemy{
   constructor(tile, spriteSheetSrc){
@@ -53,7 +53,7 @@ class Enemy{
     this.y = this.currentTile.coords[1];
     this.frame = 0; // Start at a random frame
     this.maxFrame = 10; // Assuming you have 16 frames 0-15
-    this.frameDelay = 5; // Random delay between 5-14
+    this.frameDelay = fps/16; // Random delay between 5-14
     this.frameTimer = 0;
     this.power =1;
     this.spriteWidth =100;
@@ -75,6 +75,9 @@ class Enemy{
   if(this.frameTimer % this.frameDelay === 0){
     this.frame = this.frame >= this.maxFrame ? 0 : this.frame + 1;
   }
+}
+updateDelay(newd){
+  this.frameDelay = newd;
 }
 draw(){ 
   if(this.showoutline == true){
@@ -133,7 +136,7 @@ class Player extends Enemy{
     this.xOffSet=9;
     this.yOffSet=35;
     this.showoutline = false;
-    this.frameDelay= 10;
+    this.frameDelay= fps/16;
     this.inventory = {
       power: this.power,
       gold: 0,
@@ -206,6 +209,15 @@ function nobutton() {
   // Check if startMusic is defined globally
 
   start(); // start the game
+}
+function setFPS(){
+  fps = 2;
+  enemyarray.forEach(Enemy => {
+    Enemy.updateDelay(fps);
+     
+  });
+  console.log(enemyarray);
+
 }
 
 
