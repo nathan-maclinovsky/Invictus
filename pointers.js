@@ -1,5 +1,5 @@
 var mymap= window.tiles;
-
+window.edgeTiles = [];
 
 
 
@@ -30,19 +30,22 @@ function createTilePointers(tileList) {
                 tile.adjacent[direction] = neighborTile;
             }
         });
+        if (Object.keys(tile.adjacent).length < 6) {
+          edgeTiles.push(tile);
+      }
     });
   
-    // log each tile and its adjacent tiles for debugging
-    // tileList.forEach(tile => {
-    //     console.log(`Tile at (${tile.coords.join(', ')}): Adjacent tiles:`);
-    //     Object.entries(tile.adjacent).forEach(([direction, adj]) => {
-    //         console.log(`  Direction ${direction}: Tile at (${adj.coords.join(', ')})`);
-    //     });
-    // });
+   
+   
   }
   function isAdjacent(currentTile, targetTile) {
     return Object.values(currentTile.adjacent).some(adjTile => adjTile === targetTile);
   }
+
+
+  
+
+
   
     
     

@@ -102,11 +102,11 @@ class Tower extends Enemy{
   this.state =0;
   this.frame = 0;
   this.maxFrame=0;
-  this.spriteWidth =275;
-  this.spriteHeight=475;
-  this.cutOutWidth=275;
-  this.cutOutHight=475;
-  this.yOffSet = 30;
+  this.spriteWidth =100;
+  this.spriteHeight=173;
+  this.cutOutWidth=100;
+  this.cutOutHight=173;
+  this.yOffSet = 27;
   this.showoutline = false;
 }
 draw(){ 
@@ -114,7 +114,7 @@ draw(){
   ctx.strokeStyle = 'red';
   ctx.strokeRect(this.x-this.xOffSet, this.y-this.yOffSet, this.cutOutWidth, this.cutOutHight); 
   }
-  ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.spriteWidth/7.5, this.spriteHeight/7.5);
+  ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.spriteWidth/3, this.spriteHeight/3);
 }
 
 
@@ -172,11 +172,10 @@ class Wizard extends Enemy {
   }
 }
 var ben = new Player(mymap.tileList[((722/2)+32)]);
-var tower = new Tower(mymap.tileList[0]);
-var tower2 = new Tower(mymap.tileList[400]);
+
+
 enemyarray.push(ben);
-enemyarray.push(tower);
-enemyarray.push(tower2);
+
 enemyarray.push(new Wizard(mymap.tileList[1]));
 console.log(enemyarray);
 
@@ -203,11 +202,22 @@ class Necromancer extends Enemy{
   }
 
 }
+function genTower(){
+  var random = Math.floor(Math.random() * 4);
+  for(let i = 0; i< random; i++){
+  var randomNumber = Math.floor(Math.random() * edgeTiles.length) + 0;
+  enemyarray.push(new Tower(edgeTiles[randomNumber]));
+  }
+  
+}
 
 function nobutton() {
   document.getElementById("beginbutton").style.display = "none";
+  console.log(edgeTiles);
+  genTower();
+ 
   // Check if startMusic is defined globally
-
+  
   start(); // start the game
 }
 function setFPS(){
@@ -257,15 +267,7 @@ function start(){
     });
     requestAnimationFrame(start);
 
-  //   document.onkeydown = function(event) {
-  //       moveKey(event);
-
-  // };
-
-
-
-
-  }
+ }
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -324,6 +326,8 @@ document.getElementById('settingsMenuIcon').addEventListener('click', function()
   var dropdown = document.getElementById('settingsDropdown');
   dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
 });
+
+
 
 
 
