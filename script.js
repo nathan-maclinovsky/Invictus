@@ -23,12 +23,13 @@ necromancer.src = 'Game assets/Necromancer_creativekind-Sheet.png';
 let gameFrameSpeed = 5;
 let shroomgameFrameSpeed = 15;
 let gamestart = false;
-
+var usedTiles = [];
 
 let gameFrame = 0;
 const shroomarray = [];
 const necromancerArray = [];
 const enemyarray= [];
+const towers = [];
 
 var mymap= window.tiles;
 var fps = 160;
@@ -94,7 +95,55 @@ changeTile(tile){
 }
 
 
+
+ moveTowardsPlayer(enemy, player) {
+  
+  // First, get the current tile of the player and the enemy.
+  const playerTile = player.currentTile;
+  const enemyTile = enemy.currentTile;
+
+  // Assume the enemy can't move or there is no movement closer to the player.
+  let closestTile = null;
+  let minDistance = Infinity;
+
+  // Go through each of the enemy's adjacent tiles.
+  for (const direction in enemyTile.adjacent) {
+    const adjacentTile = enemyTile.adjacent[direction];
+    
+    // Ensure the adjacent tile exists.
+    if (adjacentTile) {
+      // Calculate the distance from this adjacent tile to the player's tile.
+      const distance = getDistance(adjacentTile, playerTile);
+      
+      // If this distance is less than the current minimum, update closestTile and minDistance.
+      if (distance < minDistance) {
+        closestTile = adjacentTile;
+        minDistance = distance;
+      }
+    }
+  }
+
+  // If we found a tile closer to the player, move the enemy to this tile.
+  if (closestTile) {
+    console.log("bruh");
+    enemy.changeTile(closestTile);
+  }
 }
+
+}
+
+
+
+
+function  getDistance(tileA, tileB) {
+  // Calculate the Euclidean distance between two tiles.
+  // You might need to adjust this function if you require a more accurate distance
+  // measurement for a hex grid.
+  const dx = tileA.coords[0] - tileB.coords[0];
+  const dy = tileA.coords[1] - tileB.coords[1];
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
 class Tower extends Enemy{
   constructor(tile,assetpath){
   console.log("tower");
@@ -137,6 +186,7 @@ class Player extends Enemy{
     this.yOffSet=35;
     this.showoutline = false;
     this.frameDelay= fps/16;
+    this.playerTurn = true;
     this.inventory = {
       power: this.power,
       gold: 0,
@@ -144,6 +194,15 @@ class Player extends Enemy{
   };
 
   }
+  changeTile(tile){
+    if(ben.playerTurn == true){
+    this.currentTile = tile;
+    this.x = this.currentTile.coords[0];
+    this.y = this.currentTile.coords[1];
+    ben.playerTurn = false;
+    console.log("test: "+ben.playerTurn);
+  }
+}
   
 }
 
@@ -174,7 +233,7 @@ class Wizard extends Enemy {
 var ben = new Player(mymap.tileList[((722/2)+32)]);
 
 
-enemyarray.push(ben);
+
 
 enemyarray.push(new Wizard(mymap.tileList[1]));
 console.log(enemyarray);
@@ -202,13 +261,18 @@ class Necromancer extends Enemy{
   }
 
 }
-function genTower(){
-  var random = Math.floor(Math.random() * 4);
-  for(let i = 0; i< random; i++){
-  var randomNumber = Math.floor(Math.random() * edgeTiles.length) + 0;
-  enemyarray.push(new Tower(edgeTiles[randomNumber]));
+ 
+var usedTilesforTower = [];
+function genTower() {
+  var random = Math.floor(Math.random() * 4) + 1;
+  for(let i = 0; i < random; i++) {
+    var randomNumber;
+    do {
+      randomNumber = Math.floor(Math.random() * edgeTiles.length);
+    } while (usedTilesforTower.includes(randomNumber)); // Keep generating a new number until it's unique
+    usedTilesforTower.push(randomNumber); // Add the used tile to the usedTiles array
+    towers.push(new Tower(edgeTiles[randomNumber]));
   }
-  
 }
 
 function nobutton() {
@@ -242,7 +306,7 @@ for(let i = 0; i< numberOfEnemies; i++){
 
 function start(){
     gameFrame ++;
-    
+    console.log(ben.playerTurn);
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
     for (let i = 0; i < mymap.tileList.length; i++) {
         dx =mymap.tileList[i].coords[0];
@@ -263,8 +327,23 @@ function start(){
     enemyarray.forEach(Enemy => {
       Enemy.update();
       Enemy.draw();
-       
+      
     });
+    towers.forEach(Enemy => {
+      Enemy.update();
+      Enemy.draw();
+      
+    });
+    ben.update();
+    ben.draw();
+    if(ben.playerTurn == false){
+      enemyarray.forEach(Enemy => {
+        Enemy.moveTowardsPlayer(Enemy,ben);
+         
+      });
+      ben.playerTurn = true;
+
+    }
     requestAnimationFrame(start);
 
  }
