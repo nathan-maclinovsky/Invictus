@@ -4,6 +4,10 @@ window.edgeTiles = [];
 
 
 function createTilePointers(tileList) {
+
+  tileList.forEach(tile => {
+  tile.occupied = false; // Initialize all tiles as unoccupied
+});
     console.log("in");
     // Define the offsets for the surrounding tiles
     const offsets = {

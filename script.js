@@ -7,6 +7,10 @@ const ctx = canvas.getContext("2d");
 const set2 = new Image();
 set2.src = 'Game assets/Hex_v01_grid.png';
 
+const playerSprite = new Image();
+playerSprite.src = 'Game assets/NinjaSprites/Idle.png';
+
+
 const intro1 = new Image();
 intro1.src = 'Game assets/pixle_art_of_a__1-transformed.png';
 
@@ -89,51 +93,64 @@ draw(){
 }
 
 changeTile(tile){
+  if(tile.occupied == false ){
+  this.currentTile.occupied = false;
+  tile.occupied = true;
   this.currentTile = tile;
   this.x = this.currentTile.coords[0];
   this.y = this.currentTile.coords[1];
+  }
 }
 
+moveTowardsPlayer(enemy, player) {
+  var moveTowardsPlayer = Math.random();
 
 
- moveTowardsPlayer(enemy, player) {
-  
-  // First, get the current tile of the player and the enemy.
   const playerTile = player.currentTile;
   const enemyTile = enemy.currentTile;
 
-  // Assume the enemy can't move or there is no movement closer to the player.
-  let closestTile = null;
-  let minDistance = Infinity;
+  if (moveTowardsPlayer < 0.25){
+      let closestTile = null;
+      let minDistance = Infinity;
 
-  // Go through each of the enemy's adjacent tiles.
-  for (const direction in enemyTile.adjacent) {
-    const adjacentTile = enemyTile.adjacent[direction];
-    
-    // Ensure the adjacent tile exists.
-    if (adjacentTile) {
-      // Calculate the distance from this adjacent tile to the player's tile.
-      const distance = getDistance(adjacentTile, playerTile);
-      
-      // If this distance is less than the current minimum, update closestTile and minDistance.
-      if (distance < minDistance) {
-        closestTile = adjacentTile;
-        minDistance = distance;
+      for (const direction in enemyTile.adjacent) {
+          const adjacentTile = enemyTile.adjacent[direction];
+          if (adjacentTile) {
+              const distance = getDistance(adjacentTile, playerTile);
+              if (distance < minDistance) {
+                  closestTile = adjacentTile;
+                  minDistance = distance;
+              }
+          }
       }
+
+      if (closestTile) {
+          enemy.changeTile(closestTile);
+      }
+  }
+  if (moveTowardsPlayer > 0.25 && moveTowardsPlayer < 0.5){
+      // Instead of moving to the closest tile, move to a random adjacent tile.
+      const adjacentTiles = Object.values(enemyTile.adjacent).filter(tile => tile !== null);
+      if (adjacentTiles.length > 0) {
+          const randomTileIndex = Math.floor(Math.random() * adjacentTiles.length);
+          const randomTile = adjacentTiles[randomTileIndex];
+          enemy.changeTile(randomTile);
+      }
+  }
+}
+
+}
+
+
+function checkTiles() {
+  enemyarray.forEach(Enemy => {
+    if(Enemy.currentTile == ben.currentTile){
+      console.log("on the same tile");
     }
-  }
 
-  // If we found a tile closer to the player, move the enemy to this tile.
-  if (closestTile) {
-    console.log("bruh");
-    enemy.changeTile(closestTile);
-  }
+     
+  });
 }
-
-}
-
-
-
 
 function  getDistance(tileA, tileB) {
   // Calculate the Euclidean distance between two tiles.
@@ -146,7 +163,6 @@ function  getDistance(tileA, tileB) {
 
 class Tower extends Enemy{
   constructor(tile,assetpath){
-  console.log("tower");
   super(tile,'Game assets/castles/Asset 24.png');
   this.state =0;
   this.frame = 0;
@@ -166,10 +182,11 @@ draw(){
   ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.spriteWidth/3, this.spriteHeight/3);
 }
 
-
+playerSprite
 }
 class Player extends Enemy{
   constructor(tile){
+    tile.occupied = true;
     super(tile,'Game assets/NinjaSprites/Idle.png');
     this.power = 5;
     this.state =0;
@@ -187,6 +204,7 @@ class Player extends Enemy{
     this.showoutline = false;
     this.frameDelay= fps/16;
     this.playerTurn = true;
+    this.spriteSheet = playerSprite;
     this.inventory = {
       power: this.power,
       gold: 0,
@@ -195,12 +213,12 @@ class Player extends Enemy{
 
   }
   changeTile(tile){
+   
     if(ben.playerTurn == true){
     this.currentTile = tile;
     this.x = this.currentTile.coords[0];
     this.y = this.currentTile.coords[1];
     ben.playerTurn = false;
-    console.log("test: "+ben.playerTurn);
   }
 }
   
@@ -209,6 +227,7 @@ class Player extends Enemy{
 
 class Wizard extends Enemy {
   constructor(tile) {
+    tile.occupied = true;
     
     // Pass the static sprite sheet source to the super class constructor
     super(tile, 'Game assets/WizardSprites/Idle.png');
@@ -235,11 +254,10 @@ var ben = new Player(mymap.tileList[((722/2)+32)]);
 
 
 
-enemyarray.push(new Wizard(mymap.tileList[1]));
-console.log(enemyarray);
 
 class Necromancer extends Enemy{
   constructor(tile) { 
+    tile.occupied = true;
     // Pass the static sprite sheet source to the super class constructor
     super(tile, 'Game assets/Necromancer_creativekind-Sheet.png');
     // You can adjust any properties specific to ShroomEnemy here
@@ -277,7 +295,6 @@ function genTower() {
 
 function nobutton() {
   document.getElementById("beginbutton").style.display = "none";
-  console.log(edgeTiles);
   genTower();
  
   // Check if startMusic is defined globally
@@ -295,18 +312,22 @@ function setFPS(){
 }
 
 
-
-for(let i = 0; i< numberOfEnemies; i++){
-  var randomNumber = Math.floor(Math.random() * 722) + 0;
-  enemyarray.push(new Necromancer(mymap.tileList[randomNumber]));
-  console.log(mymap.tileList[randomNumber].coords);
- 
+function spawnEnemy(){
+  
+  if(enemyarray.length < 10){
+  var random = Math.floor(Math.random() * towers.length);
+  var enemyType = Math.floor(Math.random() *2) +1;
+  if(enemyType == 1 && towers[random].currentTile.occupied == false){
+    enemyarray.push(new Wizard(towers[random].currentTile));
+  }
+  if(enemyType == 2 && towers[random].currentTile.occupied == false){
+    enemyarray.push(new Necromancer(towers[random].currentTile));
+  }
 }
-
+}
 
 function start(){
     gameFrame ++;
-    console.log(ben.playerTurn);
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
     for (let i = 0; i < mymap.tileList.length; i++) {
         dx =mymap.tileList[i].coords[0];
@@ -324,16 +345,20 @@ function start(){
        
       }
     ctx.drawImage(house, 180, 0, 100, 200, mymap.tileList[722/2].coords[0]-16, mymap.tileList[722/2].coords[1]+6, 30, 60); 
-    enemyarray.forEach(Enemy => {
-      Enemy.update();
-      Enemy.draw();
-      
-    });
+    
+    
     towers.forEach(Enemy => {
       Enemy.update();
       Enemy.draw();
       
     });
+    
+    enemyarray.forEach(Enemy => {
+      Enemy.update();
+      Enemy.draw();
+      
+    });
+
     ben.update();
     ben.draw();
     if(ben.playerTurn == false){
@@ -344,9 +369,18 @@ function start(){
       ben.playerTurn = true;
 
     }
+    spawnEnemy();
+    checkTiles();
     requestAnimationFrame(start);
 
  }
+
+
+
+function fight(Enemy){
+  ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+
+}
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -365,14 +399,13 @@ animate();
 
 
 function onCanvasClick(event) {
-  console.log("click");
+
   // Calculate the canvas position
   const rect = canvas.getBoundingClientRect();
   const mouseX = event.clientX - rect.left;
   const mouseY = event.clientY - rect.top;
 
-  console.log(mouseX);
-  console.log(mouseY);
+
   // Find the clicked tile
   const clickedTile = mymap.tileList.find(tile => {
     const tileX = tile.coords[0];
@@ -382,7 +415,7 @@ function onCanvasClick(event) {
     return mouseX >= tileX && mouseX <= tileX + tileWidth &&
            mouseY >= tileY && mouseY <= tileY + tileHeight;
 });
-  console.log(clickedTile);
+
   
 
   if (clickedTile && isAdjacent(ben.currentTile, clickedTile)) {
@@ -401,7 +434,6 @@ function resetPlayerPosition() {
 
    
 document.getElementById('settingsMenuIcon').addEventListener('click', function() {
-  console.log("ben");
   var dropdown = document.getElementById('settingsDropdown');
   dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
 });
