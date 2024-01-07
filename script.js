@@ -11,6 +11,8 @@ const playerSprite = new Image();
 playerSprite.src = 'Game assets/NinjaSprites/Idle.png';
 
 
+  
+
 const intro1 = new Image();
 intro1.src = 'Game assets/pixle_art_of_a__1-transformed.png';
 
@@ -21,6 +23,7 @@ const shroom_sheet = new Image();
 const numberOfEnemies = 1;
 shroom_sheet.src = 'Game assets/Idle.png';
 
+let isFighting = false;
 const necromancer = new Image();
 necromancer.src = 'Game assets/Necromancer_creativekind-Sheet.png';
 
@@ -53,6 +56,7 @@ class Item{
 
 class Enemy{
   constructor(tile, spriteSheetSrc){
+    this.health = 100;
     this.currentTile = tile;
     this.x = this.currentTile.coords[0];
     this.y = this.currentTile.coords[1];
@@ -74,6 +78,8 @@ class Enemy{
     this.spriteSheet = new Image();
     this.spriteSheet.src = spriteSheetSrc;
     this.showoutline = true;
+    this.canvasDrawWidth;
+    this.canvasDrawHeight;
  }
  update(){
   this.frameTimer++;
@@ -84,12 +90,13 @@ class Enemy{
 updateDelay(newd){
   this.frameDelay = newd;
 }
+
 draw(){ 
   if(this.showoutline == true){
   ctx.strokeStyle = 'red';
   ctx.strokeRect(this.x-this.xOffSet, this.y-this.yOffSet, this.cutOutWidth, this.cutOutHight); 
   }
-  ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.cutOutWidth,this.cutOutHight);
+  ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.canvasDrawWidth,this.canvasDrawHeight);
 }
 
 changeTile(tile){
@@ -145,14 +152,14 @@ moveTowardsPlayer(enemy, player) {
 function checkTiles() {
   enemyarray.forEach(Enemy => {
     if(Enemy.currentTile == ben.currentTile){
-      console.log("on the same tile");
+      fight();
     }
 
      
   });
 }
 
-function  getDistance(tileA, tileB) {
+function getDistance(tileA, tileB) {
   // Calculate the Euclidean distance between two tiles.
   // You might need to adjust this function if you require a more accurate distance
   // measurement for a hex grid.
@@ -173,6 +180,7 @@ class Tower extends Enemy{
   this.cutOutHight=173;
   this.yOffSet = 27;
   this.showoutline = false;
+  
 }
 draw(){ 
   if(this.showoutline == true){
@@ -182,13 +190,14 @@ draw(){
   ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.spriteWidth/3, this.spriteHeight/3);
 }
 
-playerSprite
+
 }
 class Player extends Enemy{
   constructor(tile){
     tile.occupied = true;
     super(tile,'Game assets/NinjaSprites/Idle.png');
     this.power = 5;
+    this.numTurms = 0;
     this.state =0;
     this.frame = 0;
     this.maxFrame=3;
@@ -205,6 +214,8 @@ class Player extends Enemy{
     this.frameDelay= fps/16;
     this.playerTurn = true;
     this.spriteSheet = playerSprite;
+    this.canvasDrawWidth = this.cutOutWidth;
+    this.canvasDrawHeight = this.cutOutHight;
     this.inventory = {
       power: this.power,
       gold: 0,
@@ -219,6 +230,7 @@ class Player extends Enemy{
     this.x = this.currentTile.coords[0];
     this.y = this.currentTile.coords[1];
     ben.playerTurn = false;
+    this.numTurms++;
   }
 }
   
@@ -245,6 +257,8 @@ class Wizard extends Enemy {
     this.yOffSet=75;
     this.xOffSet=6;
     this.showoutline = false;
+    this.canvasDrawWidth = this.cutOutWidth;
+    this.canvasDrawHeight = this.cutOutHight;
     // this.yOffSet=0;
 
   }
@@ -274,6 +288,8 @@ class Necromancer extends Enemy{
     this.yOffSet=40;
     this.xOffSet=10;
     this.showoutline = false;
+    this.canvasDrawWidth = this.cutOutWidth;
+    this.canvasDrawHeight = this.cutOutHight;
     // this.yOffSet=0;
 
   }
@@ -295,6 +311,7 @@ function genTower() {
 
 function nobutton() {
   document.getElementById("beginbutton").style.display = "none";
+  isgamestart = true;
   genTower();
  
   // Check if startMusic is defined globally
@@ -314,7 +331,7 @@ function setFPS(){
 
 function spawnEnemy(){
   
-  if(enemyarray.length < 10){
+  if(enemyarray.length < 10 && ben.numTurms%10 == 0){
   var random = Math.floor(Math.random() * towers.length);
   var enemyType = Math.floor(Math.random() *2) +1;
   if(enemyType == 1 && towers[random].currentTile.occupied == false){
@@ -327,6 +344,7 @@ function spawnEnemy(){
 }
 
 function start(){
+  if (!isFighting) {
     gameFrame ++;
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
     for (let i = 0; i < mymap.tileList.length; i++) {
@@ -352,7 +370,7 @@ function start(){
       Enemy.draw();
       
     });
-    
+  
     enemyarray.forEach(Enemy => {
       Enemy.update();
       Enemy.draw();
@@ -371,27 +389,64 @@ function start(){
     }
     spawnEnemy();
     checkTiles();
+  }
     requestAnimationFrame(start);
-
+    
  }
 
 
-
-function fight(Enemy){
+ let count = 1000;
+ function fight(Enemy){
   ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+   isFighting = true;
+   console.log(count);
+   if(count == 1000){
+    var previousTile = ben.currentTile;
+    ben.changeTile(mymap.tileList[655]);
+    //ben.canvasDrawHeight *= 5;
+    //ben.canvasDrawWidth *= 5;
+    document.body.style.backgroundImage = "url('Game assets/Small_grass_patch.png')";
 
-}
+   }  
+   ben.update();
+   ben.draw();
+   
+ 
+   count--; 
+   
+ 
+   if (count <= 0) {
+     document.body.style.backgroundImage = "url('Game assets/ocean.jpeg')";
+     ben.playerTurn = true;
+     resetPlayerPosition(); 
+     isFighting = false;
+     //ben.canvasDrawHeight /= 5;
+     //ben.canvasDrawWidth /= 5; 
+     count = 1000;
+     
+   } else {
+    
+     requestAnimationFrame(fight);
+   }
+ }
+ 
+
+
+
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
   }
 
 
-
+let isgamestart = false;
 function animate(){ 
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT); 
     ctx.drawImage(intro1, canvas.width / 2 - intro1.width / 2,canvas.height / 2 - intro1.height / 2);
+    console.log("hi");
+    if(isgamestart == false){
     requestAnimationFrame(animate);
+    }
     
 }
 animate();
