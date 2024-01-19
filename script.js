@@ -37,6 +37,7 @@ const shroomarray = [];
 const necromancerArray = [];
 const enemyarray= [];
 const towers = [];
+let fightarray = []; 
 
 var mymap= window.tiles;
 var fps = 160;
@@ -80,6 +81,8 @@ class Enemy{
     this.showoutline = true;
     this.canvasDrawWidth;
     this.canvasDrawHeight;
+    this.fighting = false;
+  
  }
  update(){
   this.frameTimer++;
@@ -96,11 +99,16 @@ draw(){
   ctx.strokeStyle = 'red';
   ctx.strokeRect(this.x-this.xOffSet, this.y-this.yOffSet, this.cutOutWidth, this.cutOutHight); 
   }
+  if(this.fighting == true){
+    ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.canvasDrawWidth*3,this.canvasDrawHeight*3);
+  }
+  else{
   ctx.drawImage(this.spriteSheet,this.leftStart+this.frame*this.spriteWidth,this.topStart+this.state*this.spriteHeight,this.cutOutWidth,this.cutOutHight,this.x-this.xOffSet,this.y-this.yOffSet,this.canvasDrawWidth,this.canvasDrawHeight);
+  }
 }
 
 changeTile(tile){
-  if(tile.occupied == false ){
+  if(tile.occupied === false ){
   this.currentTile.occupied = false;
   tile.occupied = true;
   this.currentTile = tile;
@@ -150,14 +158,25 @@ moveTowardsPlayer(enemy, player) {
 
 
 function checkTiles() {
+  let count = 0;
   enemyarray.forEach(Enemy => {
+    count++;
     if(Enemy.currentTile == ben.currentTile){
-      fight();
+      fightarray.push(Enemy); 
+      
+      fight(enemyarray[count], count);
     }
 
      
   });
+
+
 }
+
+
+
+
+
 
 function getDistance(tileA, tileB) {
   // Calculate the Euclidean distance between two tiles.
@@ -346,6 +365,10 @@ function spawnEnemy(){
 function start(){
   if (!isFighting) {
     gameFrame ++;
+    if(gameFrame  == 1000){
+      //console.log(enemyarray);
+      console.log("bruh"+ enemyarray[0].currentTile.occupied);
+    }
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
     for (let i = 0; i < mymap.tileList.length; i++) {
         dx =mymap.tileList[i].coords[0];
@@ -396,20 +419,34 @@ function start(){
 
 
  let count = 1000;
- function fight(Enemy){
+ let temp;
+ function fight(enemy){
   ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-   isFighting = true;
-   console.log(count);
    if(count == 1000){
+    console.log("array "+ fightarray);
+    temp = fightarray[0].currentTile;
+    console.log(`Tile Coords: ${temp.coords}`);
+    isFighting = true;
+    ben.fighting = true;
+    fightarray[0].fighting = true;
+    
+    
+    
     var previousTile = ben.currentTile;
-    ben.changeTile(mymap.tileList[655]);
-    //ben.canvasDrawHeight *= 5;
-    //ben.canvasDrawWidth *= 5;
+   // ben.changeTile(mymap.tileList[500]);
+    ben.changeTile(mymap.tileList[510]);
+    fightarray[0].changeTile(mymap.tileList[490]);
+    //console.log(temp);
     document.body.style.backgroundImage = "url('Game assets/Small_grass_patch.png')";
 
    }  
    ben.update();
    ben.draw();
+   fightarray.forEach(Enemy => {
+    Enemy.update();
+    Enemy.draw();
+    
+  });
    
  
    count--; 
@@ -417,12 +454,16 @@ function start(){
  
    if (count <= 0) {
      document.body.style.backgroundImage = "url('Game assets/ocean.jpeg')";
+     ben.fighting = false;
+     fightarray[0].fighting = false;
+     console.log(`Tile status: ${temp.occupied}`);
+
+     fightarray[0].changeTile(temp);
      ben.playerTurn = true;
      resetPlayerPosition(); 
      isFighting = false;
-     //ben.canvasDrawHeight /= 5;
-     //ben.canvasDrawWidth /= 5; 
      count = 1000;
+     fightarray = [];
      
    } else {
     
