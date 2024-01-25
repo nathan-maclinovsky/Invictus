@@ -45,6 +45,7 @@ pids/
 
 # Compiled files
 /**/*.js
+!enemies.js
 /**/*.js.map
 
 # OS and Editor directories

@@ -1,7 +1,7 @@
 var mymap= window.tiles;
 window.edgeTiles = [];
 
-
+//test
 
 function createTilePointers(tileList) {
 
