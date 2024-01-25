@@ -1,0 +1,71 @@
+# Node.js
+## Dependency directories
+node_modules/
+
+## Optional npm cache directory
+.npm
+
+## Optional eslint cache
+.eslintcache
+
+## Optional: dotenv environment variable files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+## yarn cache files
+.yarn-cache
+yarn-error.log
+
+# Logs
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.pid.lock
+*.seed
+*.pid.db
+
+# Development directories
+/.pnp/
+.pnp.js
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Production build files
+/dist
+/build
+
+# Compiled files
+/**/*.js
+/**/*.js.map
+
+# OS and Editor directories
+.DS_Store
+Thumbs.db
+db.json
+*.jst
+*.sublime-*
+/.vscode/
+.idea/
+
+# Other files and directories to ignore
+coverage/
+*.log
+*.log.*
+.tmp
+*.tmp.*
+
+# If using Bower
+bower_components/
+
+# If using a frontend scaffold like Yeoman
+.generated
+.sass-cache
